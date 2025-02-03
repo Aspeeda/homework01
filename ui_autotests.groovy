@@ -1,5 +1,5 @@
 timeout(time: 60, unit: 'MINUTES') {
-    node('maven') {
+    agent any
 
         parameters {
             choice(name: 'BROWSER', choices: ['chrome', 'firefox'], description: 'Выберите браузер')
@@ -51,4 +51,3 @@ timeout(time: 60, unit: 'MINUTES') {
             echo 'Тесты завершены.'
         }
     }
-}
