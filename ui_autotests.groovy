@@ -31,7 +31,7 @@ pipeline {
                 script {
                     dir('path/to/your/project') {
                         status = sh(
-                                script: "mvn test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
+                                script: "./gradlew test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
                                 returnStatus: true
                         )
 
