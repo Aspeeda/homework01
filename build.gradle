@@ -31,7 +31,6 @@ dependencies {
             "org.assertj:assertj-core:3.26.3",
             "com.puppycrawl.tools:checkstyle:10.18.1",
             "org.jsoup:jsoup:1.18.1"
-
     )
 
     testImplementation(
