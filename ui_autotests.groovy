@@ -7,18 +7,16 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                checkout scm
-            }
+            checkout scm
         }
 
-        stage('Checkout utils') {
-            steps {
-                dir('tools') {
-                    git branch: 'main', url: 'https://github.com/Aspeeda/homework01.git', credentialsId: 'jenkins'
-                }
-            }
-        }
+//        stage('Checkout utils') {
+//            steps {
+//                dir('tools') {
+//                    git branch: 'main', url: 'https://github.com/Aspeeda/homework01.git', credentialsId: 'jenkins'
+//                }
+//            }
+//        }
 
         stage('Running UI tests') {
 
