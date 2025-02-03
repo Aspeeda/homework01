@@ -12,6 +12,12 @@ pipeline {
             }
         }
 
+        stage('Check Current Path') {
+            steps {
+                sh 'pwd'
+            }
+        }
+
 //        stage('Checkout utils') {
 //            steps {
 //                dir('tools') {
@@ -23,18 +29,19 @@ pipeline {
         stage('Running UI tests') {
             steps {
                 script {
-                    status = sh(
-                            script: "mvn test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
-                            returnStatus: true
-                    )
+                    dir('path/to/your/project') {
+                        status = sh(
+                                script: "mvn test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
+                                returnStatus: true
+                        )
 
-                    if (status > 0) {
-                        currentBuild.result = 'UNSTABLE'
+                        if (status > 0) {
+                            currentBuild.result = 'UNSTABLE'
+                        }
                     }
                 }
             }
         }
-    }
 
 //        stage('Publish Allure Report') {
 //            steps {
@@ -46,11 +53,11 @@ pipeline {
 //                ])
 //            }
 //        }
-}
+    }
 
-post {
-    always {
-        echo 'Тесты завершены.'
+    post {
+        always {
+            echo 'Тесты завершены.'
+        }
     }
 }
-
