@@ -23,13 +23,16 @@ pipeline {
         stage('Running UI tests') {
             steps {
                 script {
-                    status = sh(
-                            script: "mvn test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
-                            returnStatus: true
-                    )
+                    // Переход в директорию с pom.xml перед запуском mvn test
+                    dir('path/to/your/project') {
+                        status = sh(
+                                script: "mvn test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
+                                returnStatus: true
+                        )
 
-                    if (status > 0) {
-                        currentBuild.result = 'UNSTABLE'
+                        if (status > 0) {
+                            currentBuild.result = 'UNSTABLE'
+                        }
                     }
                 }
             }
