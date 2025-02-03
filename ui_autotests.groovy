@@ -7,28 +7,34 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            checkout scm
-        }
-
-//        stage('Checkout utils') {
-//            steps {
-//                dir('tools') {
-//                    git branch: 'main', url: 'https://github.com/Aspeeda/homework01.git', credentialsId: 'jenkins'
-//                }
-//            }
-//        }
-
-        stage('Running UI tests') {
-
-            status = sh(
-                    script: "mvn test -DBROWSER=$env.BROWSER -DBASE_URL=$env.BASE_URL",
-                    returnStatus: true
-            )
-
-            if (status > 0) {
-                currentBuild.status = 'UNSTABLE'
+            steps {
+                checkout scm
             }
         }
+
+        stage('Checkout utils') {
+            steps {
+                dir('tools') {
+                    git branch: 'main', url: 'https://github.com/Aspeeda/homework01.git', credentialsId: 'jenkins'
+                }
+            }
+        }
+
+        stage('Running UI tests') {
+            steps {
+                script {
+                    status = sh(
+                            script: "mvn test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
+                            returnStatus: true
+                    )
+
+                    if (status > 0) {
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                }
+            }
+        }
+    }
 
 //        stage('Publish Allure Report') {
 //            steps {
@@ -40,11 +46,11 @@ pipeline {
 //                ])
 //            }
 //        }
-    }
+}
 
-    post {
-        always {
-            echo 'Тесты завершены.'
-        }
+post {
+    always {
+        echo 'Тесты завершены.'
     }
 }
+
