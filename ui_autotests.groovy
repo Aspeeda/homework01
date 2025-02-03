@@ -1,45 +1,54 @@
 timeout(time: 60, unit: 'MINUTES') {
     node('maven') {
 
-        stage('Checkout') {
-            checkout scm
+        parameters {
+            choice(name: 'BROWSER', choices: ['chrome', 'firefox'], description: 'Выберите браузер')
         }
 
-        stage('Checkout utils') {
-            dir('tools') {
-                git branch: 'main', url: 'https://github.com/Aspeeda/homework01.git', credentialID: 'jenkins'
+        stage('Checkout') {
+            steps {
+                checkout scm
             }
         }
 
-        utils = load './tools/utils'
-        utils.prepare_yaml_config()
+        stage('Checkout utils') {
+            steps {
+                dir('tools') {
+                    git branch: 'main', url: 'https://github.com/Aspeeda/homework01.git', credentialsId: 'jenkins'
+                }
+            }
+        }
 
         stage('Running UI tests') {
+            steps {
+                script {
+                    status = sh(
+                            script: "mvn test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
+                            returnStatus: true
+                    )
 
-            status = sh(
-                    script: "mvn test -DBROWSER=$env.BROWSER -DBASE_URL=$env.BASE_URL",
-                    returnStatus: true
-            )
-
-            if(status>0) {
-                currentBuild.status = 'UNSTABLE'
+                    if (status > 0) {
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                }
             }
         }
 
         stage('Publish allure report') {
-            allure([
-                    disabled: false,
-                    includeProperties: false,
-                    jdk: '',
-                    report: './target/allure-results',
-                    reportBuildPolicy: 'ALWAYS'
-            ])
-        }
-
-        post {
-            always {
-                echo 'Тесты завершены.'
+            steps {
+                allure([
+                        disabled: false,
+                        includeProperties: false,
+                        report: './target/allure-results',
+                        reportBuildPolicy: 'ALWAYS'
+                ])
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Тесты завершены.'
         }
     }
 }
