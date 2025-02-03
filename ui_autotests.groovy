@@ -38,14 +38,13 @@ pipeline {
             }
         }
 
-        stage('Publish allure report') {
+        stage('Publish Allure Report') {
             steps {
                 allure([
-                        disabled         : false,
+                        results: [[path: 'target/allure-results']],
+                        reportBuildPolicy: 'ALWAYS',
                         includeProperties: false,
-                        results          : './target/allure-results',
-//                        report           : './target/allure-results',
-                        reportBuildPolicy: 'ALWAYS'
+                        report: './target/allure-report'
                 ])
             }
         }
