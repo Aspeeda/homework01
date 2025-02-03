@@ -7,7 +7,7 @@ timeout(time: 60, unit: 'MINUTES') {
 
         stage('Checkout utils') {
             dir('tools') {
-                git branch: 'master', url: 'example.git', credentialID: 'jenkins'
+                git branch: 'main', url: 'https://github.com/Aspeeda/homework01.git', credentialID: 'jenkins'
             }
         }
 
@@ -28,12 +28,18 @@ timeout(time: 60, unit: 'MINUTES') {
 
         stage('Publish allure report') {
             allure([
-                    disabled: true,
+                    disabled: false,
                     includeProperties: false,
                     jdk: '',
-                    report: './target/sllure-results',
+                    report: './target/allure-results',
                     reportBuildPolicy: 'ALWAYS'
             ])
+        }
+
+        post {
+            always {
+                echo 'Тесты завершены.'
+            }
         }
     }
 }
