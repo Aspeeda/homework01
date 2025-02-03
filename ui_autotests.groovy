@@ -29,19 +29,18 @@ pipeline {
         stage('Running UI tests') {
             steps {
                 script {
-                    dir('path/to/your/project') {
-                        status = sh(
-                                script: "./gradlew test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
-                                returnStatus: true
-                        )
+                    status = sh(
+                            script: "./gradlew test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
+                            returnStatus: true
+                    )
 
-                        if (status > 0) {
-                            currentBuild.result = 'UNSTABLE'
-                        }
+                    if (status > 0) {
+                        currentBuild.result = 'UNSTABLE'
                     }
                 }
             }
         }
+    }
 
 //        stage('Publish Allure Report') {
 //            steps {
@@ -53,11 +52,11 @@ pipeline {
 //                ])
 //            }
 //        }
-    }
+}
 
-    post {
-        always {
-            echo 'Тесты завершены.'
-        }
+post {
+    always {
+        echo 'Тесты завершены.'
     }
 }
+
