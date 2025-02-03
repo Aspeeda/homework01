@@ -1,10 +1,11 @@
-timeout(time: 60, unit: 'MINUTES') {
-    agent any
+pipeline {
+    agent any  // Использует любой доступный исполнитель для всего пайплайна
 
-        parameters {
-            choice(name: 'BROWSER', choices: ['chrome', 'firefox'], description: 'Выберите браузер')
-        }
+    parameters {
+        choice(name: 'BROWSER', choices: ['chrome', 'firefox'], description: 'Выберите браузер')
+    }
 
+    stages {
         stage('Checkout') {
             steps {
                 checkout scm
@@ -51,3 +52,4 @@ timeout(time: 60, unit: 'MINUTES') {
             echo 'Тесты завершены.'
         }
     }
+}
