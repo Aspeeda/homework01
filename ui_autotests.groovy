@@ -1,5 +1,5 @@
 pipeline {
-    agent any  // Использует любой доступный исполнитель для всего пайплайна
+    agent any
 
     parameters {
         choice(name: 'BROWSER', choices: ['chrome', 'firefox'], description: 'Выберите браузер')
@@ -12,13 +12,13 @@ pipeline {
             }
         }
 
-        stage('Checkout utils') {
-            steps {
-                dir('tools') {
-                    git branch: 'main', url: 'https://github.com/Aspeeda/homework01.git', credentialsId: 'jenkins'
-                }
-            }
-        }
+//        stage('Checkout utils') {
+//            steps {
+//                dir('tools') {
+//                    git branch: 'main', url: 'https://github.com/Aspeeda/homework01.git', credentialsId: 'jenkins'
+//                }
+//            }
+//        }
 
         stage('Running UI tests') {
             steps {
