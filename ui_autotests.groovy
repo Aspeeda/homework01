@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     status = sh(
-                            script: "./gradlew test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
+                            script: "gradle test -DBROWSER=${params.BROWSER} -DBASE_URL=${env.BASE_URL}",
                             returnStatus: true
                     )
 
