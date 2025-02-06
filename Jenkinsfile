@@ -41,14 +41,14 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            junit 'build/test-results/**/*.xml'
-        }
-        failure {
-            sh 'echo "Tests failed. Sending report to Telegram..."'
-            sh './send_report.sh'
-        }
-    }
+//
+//     post {
+//         always {
+//             junit 'build/test-results/**/*.xml'
+//         }
+//         failure {
+//             sh 'echo "Tests failed. Sending report to Telegram..."'
+//             sh './send_report.sh'
+//         }
+//     }
 }
