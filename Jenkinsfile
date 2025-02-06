@@ -1,9 +1,9 @@
 pipeline {
     agent { label 'maven' }
 
-    environment {
-        TELEGRAM_BOT_TOKEN = credentials('telegram_bot_token')
-    }
+//     environment {
+//         TELEGRAM_BOT_TOKEN = credentials('telegram_bot_token')
+//     }
 
     stages {
         stage('Checkout Repository') {
