@@ -31,13 +31,16 @@ pipeline {
             }
         }
 
-        stage('Generate Allure Report') {
-            steps {
-                sh "./gradlew allureReport"
-                archiveArtifacts artifacts: '**/build/allure-results/**', fingerprint: true
-            }
-        }
-    }
+      stage('Run UI Tests') {
+          sh './gradlew test'
+      }
+
+      stage('Generate Allure Report') {
+          sh './gradlew allureReport'
+          allure([
+              results: [[path: 'build/allure-results']]
+          ])
+      }
 
     post {
         always {
@@ -48,7 +51,7 @@ pipeline {
         failure {
             script {
                 def message = "Шеф, усе пропало"
-                sh "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\": \"<TELEGRAM_CHAT_ID>\", \"text\": \"${message}\"}' https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/sendMessage"
+             sh "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\": \"$chatId\", \"text\": \"$(getTelegramReport()\"}' https://api.telegram.org/bot$token/sendMessage"
             }
         }
     }
