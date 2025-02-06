@@ -6,9 +6,16 @@ pipeline {
 //     }
 
     stages {
-        stage('checkout') {
-                   checkout scm
-               }
+        stage('Checkout Repository') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/Aspeeda/homework01.git'
+                    ]]
+                ])
+            }
         }
 
         stage('Run UI Tests') {
