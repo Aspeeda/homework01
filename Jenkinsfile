@@ -1,58 +1,54 @@
 pipeline {
     agent { label 'maven' }
 
-    parameters {
-        string(name: 'BROWSER', defaultValue: 'chrome', description: 'Выбор браузера (chrome/firefox)')
-        string(name: 'BRANCH', defaultValue: 'main', description: 'Выбор ветки для тестов')
-    }
-
     environment {
-        GRADLE_OPTS = "-Dorg.gradle.daemon=false"
-        ALLURE_RESULTS = "build/allure-results"
+        TELEGRAM_BOT_TOKEN = credentials('telegram_bot_token')
     }
 
     stages {
         stage('Checkout Repository') {
             steps {
-                git branch: "${params.BRANCH}",
-                    url: 'https://github.com/Aspeeda/homework01.git',
-                    credentialsId: 'jenkins'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/Aspeeda/homework01.git',
+                        credentialsId: 'jenkins'
+                    ]]
+                ])
             }
         }
 
         stage('Setup Dependencies') {
-            sh 'chmod +x gradlew'
-            sh './gradlew dependencies'
+            steps {
+                sh 'chmod +x gradlew'
+                sh './gradlew dependencies'
+            }
         }
 
         stage('Run UI Tests') {
             steps {
-                sh "./gradlew clean test -Dbrowser=${params.BROWSER}"
+                sh './gradlew test'
             }
         }
 
-      stage('Run UI Tests') {
-          sh './gradlew test'
-      }
-
-      stage('Generate Allure Report') {
-          sh './gradlew allureReport'
-          allure([
-              results: [[path: 'build/allure-results']]
-          ])
-      }
+        stage('Generate Allure Report') {
+            steps {
+                sh './gradlew allureReport'
+                allure([
+                    results: [[path: 'build/allure-results']]
+                ])
+            }
+        }
+    }
 
     post {
         always {
-            junit '**/build/test-results/**/*.xml'
-            archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true
+            junit 'build/test-results/**/*.xml'
         }
-
         failure {
-            script {
-                def message = "Шеф, усе пропало"
-             sh "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\": \"$chatId\", \"text\": \"$(getTelegramReport()\"}' https://api.telegram.org/bot$token/sendMessage"
-            }
+            sh 'echo "Tests failed. Sending report to Telegram..."'
+            sh './send_report.sh'
         }
     }
 }
