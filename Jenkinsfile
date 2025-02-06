@@ -12,8 +12,7 @@ pipeline {
                     $class: 'GitSCM',
                     branches: [[name: '*/main']],
                     userRemoteConfigs: [[
-                        url: 'https://github.com/Aspeeda/homework01.git',
-                        credentialsId: 'jenkins'
+                        url: 'https://github.com/Aspeeda/homework01.git'
                     ]]
                 ])
             }
@@ -41,7 +40,7 @@ pipeline {
             }
         }
     }
-//
+
 //     post {
 //         always {
 //             junit 'build/test-results/**/*.xml'
