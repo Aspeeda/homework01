@@ -6,23 +6,9 @@ pipeline {
 //     }
 
     stages {
-        stage('Checkout Repository') {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/Aspeeda/homework01.git'
-                    ]]
-                ])
-            }
-        }
-
-        stage('Setup Dependencies') {
-            steps {
-                sh 'chmod +x gradlew'
-                sh './gradlew dependencies'
-            }
+        stage('checkout') {
+                   checkout scm
+               }
         }
 
         stage('Run UI Tests') {
@@ -31,14 +17,14 @@ pipeline {
             }
         }
 
-        stage('Generate Allure Report') {
-            steps {
-                sh './gradlew allureReport'
-                allure([
-                    results: [[path: 'build/allure-results']]
-                ])
-            }
-        }
+//         stage('Generate Allure Report') {
+//             steps {
+//                 sh './gradlew allureReport'
+//                 allure([
+//                     results: [[path: 'build/allure-results']]
+//                 ])
+//             }
+//         }
     }
 
 //     post {
