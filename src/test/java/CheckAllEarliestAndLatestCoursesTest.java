@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ExtendWith(UIExtension.class)
@@ -23,6 +24,7 @@ public class CheckAllEarliestAndLatestCoursesTest {
 
     @Test
     public void checkAllEarliestAndLatestCoursesTest() throws IOException {
+        step("1");
         catalogCoursesPage
                 .open("catalog", "courses")
                 .pageHeaderShouldBeSameAs("Каталог");

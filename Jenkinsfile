@@ -42,5 +42,5 @@ pipeline {
 //             sh 'echo "Tests failed. Sending report to Telegram..."'
 //             sh './send_report.sh'
 //         }
-//     }
+    }
 }
