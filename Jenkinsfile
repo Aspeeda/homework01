@@ -21,9 +21,8 @@ pipeline {
         }
 
         stage('Setup Dependencies') {
-            steps {
-                sh './gradlew dependencies'
-            }
+            sh 'chmod +x gradlew'
+            sh './gradlew dependencies'
         }
 
         stage('Run UI Tests') {
